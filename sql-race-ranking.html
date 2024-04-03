@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Race Rankings</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 15px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .highlight {
+      background-color: #fff59d !important; /* Yellow background for top 10 */
+      transition: background-color 0.3s ease;
+    }
+    .highlight-top3 {
+      background-color: #4caf50 !important; /* Green background for top 3 */
+      color: #fff;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .rank-icon {
+      font-size: 1.2em;
+      margin-right: 5px;
+    }
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .animate-rotate {
+      animation: rotate 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">SQL Race Rankings</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Nickname</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="participantTableBody">
+        <!-- Participant data will be dynamically inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Fetch data from CSV URL
+    fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1559573419&single=true&output=csv')
+      .then(response => response.text())
+      .then(data => {
+        // Parse CSV data
+        const rows = data.split('\n').slice(1); // Remove header row
+        let participants = rows.map(row => {
+          const columns = row.split(',');
+          return {
+            nickname: columns[0].trim(),
+            score: parseInt(columns[1].trim())
+          };
+        });
+
+        // Sort participants by score (descending order)
+        participants.sort((a, b) => b.score - a.score);
+
+        // Populate table with participant data with animations
+        const tableBody = document.getElementById('participantTableBody');
+        participants.forEach((participant, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${participant.nickname}</td>
+            <td>${participant.score}</td>
+          `;
+          if (index < 3) {
+            row.classList.add('highlight-top3', 'animate-fade-in');
+            const icon = document.createElement('i');
+            icon.classList.add('rank-icon', 'fas', 'fa-crown', 'animate-rotate');
+            row.querySelector('td:nth-child(2)').prepend(icon);
+          } else if (index < 10) {
+            row.classList.add('highlight', 'animate-fade-in');
+          }
+          tableBody.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+
+</body>
+</html>
