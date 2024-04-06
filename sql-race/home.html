@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Race</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #4169E1 0%, #FFD700 100%), url('https://images.unsplash.com/photo-1559526323-aa3b0f7c9f97');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 100px 0;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      animation: slideInLeft 1s ease-in-out;
+    }
+    @keyframes slideInLeft {
+      0% { transform: translateX(-100px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    header p {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 30px;
+      animation: slideInRight 1s ease-in-out;
+    }
+    @keyframes slideInRight {
+      0% { transform: translateX(100px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .section {
+      padding: 80px 0;
+      animation: fadeInUp 1s ease-in-out;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+      color: #4169E1;
+      animation: slideInDown 1s ease-in-out;
+    }
+    @keyframes slideInDown {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .footer {
+      background-color: #FFD700;
+      color: #4169E1;
+      padding: 30px 0;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .icon {
+      font-size: 3rem;
+    }
+    /* Countdown timer style */
+    #countdown {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #FF0000; /* Red color for highlighting */
+    }
+    /* Form input style */
+    input[type="text"],
+    input[type="email"] {
+      background-color: #f8f9fa; /* Light grey background */
+      border: 1px solid #ccc;
+      color: #333;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      background-color: #fff; /* White background on focus */
+    }
+    .btn-primary {
+      background-color: #4169E1; /* Blue button */
+      border-color: #4169E1;
+    }
+    .btn-primary:hover {
+      background-color: #354f87; /* Darker blue on hover */
+      border-color: #354f87;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">SQL Race</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="ranking.html">Ranking</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <h1>Chào mừng tới SQL Race</h1>
+      <p>Đường đua kiến thức - kỹ năng SQL!</p>
+      <div id="countdown"></div>
+      <a class="btn btn-primary btn-lg" href="#signup" role="button">ĐĂNG KÝ NGAY</a>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-heading">Đối tượng tham gia</h2>
+      <p>Cá nhân là sinh viên hiện đang theo học ngành Xử lý dữ liệu, bộ môn Ứng dụng phần mềm, trường Cao đẳng FPT Polytechnic, cơ sở Hà Nội.</p>
+    </div>
+  </section>
+
+  <!-- Challenges Section -->
+  <section id="challenges" class="section bg-light">
+    <div class="container">
+      <h2 class="section-heading">Thể lệ</h2>
+      <p>Vòng đua sẽ diễn ra liên tiếp trong từ 4/4 đến 8/4. Mỗi ngày, vào đúng 21:00, 
+        thí sinh sẽ truy cập vào biểu mẫu (gồm 10 câu) để làm kiểm tra do trang <a href="https://www.facebook.com/fplhn.xldl">fanpage</a> của ngành XLDL cấp. 
+        Kết quả thi đấu được tính dựa trên số câu trả lời đúng và tốc độ trả lời câu hỏi. 
+        Bảng xếp hạng sẽ được cập nhập vào 9:00 sáng ngày hôm sau.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sign Up Section -->
+  <section id="signup" class="section">
+    <div class="container">
+      <h2 class="section-heading">Đăng ký</h2>
+      <!-- Google Form -->
+      <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSdtqKo5loKPuXoUx4aS8PlA_o0LblJE00SqoIHgC7l7YRgh-g/formResponse" method="POST" target="_blank">
+        <div class="form-group">
+          <input type="text" class="form-control" id="nickname" name="entry.62015934" placeholder="Nickname" required>
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-control" id="email" name="entry.458221459" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="mssv" name="entry.2145056515" placeholder="Mã số sinh viên" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Nộp</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer text-center">
+    <div class="container">
+      <span>© 2024 SQL Race. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Countdown Timer Script -->
+  <script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("Apr 3, 2024 21:00:00").getTime();
+
+    // Update the countdown every 1 second
+    var x = setInterval(function() {
+      // Get the current date and time
+      var now = new Date().getTime();
+
+      // Calculate the remaining time
+      var distance = countDownDate - now;
+
+      // Calculate days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display the countdown
+      document.getElementById("countdown").innerHTML = "Registration ends in " + days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ";
+
+      // Highlight the countdown if less than 1 day left
+      if (distance < (1000 * 60 * 60 * 24)) {
+        document.getElementById("countdown").style.color = "#FF0000"; // Red color for highlighting
+        document.getElementById("countdown").style.fontWeight = "bold"; // Bold font for highlighting
+      }
+
+      // If the countdown is over, display a message
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("countdown").innerHTML = "EXPIRED";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
