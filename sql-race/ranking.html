@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -19,79 +21,121 @@
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
       background-color: #fff;
     }
-    th, td {
+
+    th,
+    td {
       border: 1px solid #dddddd;
-      text-align: left;
+      text-align: center;
       padding: 15px;
     }
+
     th {
       background-color: #f2f2f2;
     }
+
     .highlight {
-      background-color: #fff59d !important; /* Yellow background for top 10 */
+      background-color: #fff59d !important;
+      /* Yellow background for top 10 */
       transition: background-color 0.3s ease;
     }
+
     .highlight-top3 {
-      background-color: #4caf50 !important; /* Green background for top 3 */
+      background-color: #4caf50 !important;
+      /* Green background for top 3 */
       color: #fff;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
+
     .rank-icon {
       font-size: 1.2em;
       margin-right: 5px;
     }
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
         transform: translateY(-20px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0);
       }
     }
+
     @keyframes rotate {
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
     }
+
     @keyframes slideInLeft {
       0% {
         transform: translateX(-100%);
       }
+
       100% {
         transform: translateX(0);
       }
     }
+
     @keyframes slideInRight {
       0% {
         transform: translateX(100%);
       }
+
       100% {
         transform: translateX(0);
       }
     }
+
     .animate-fade-in {
       animation: fadeIn 0.5s ease forwards;
     }
+
     .animate-rotate {
       animation: rotate 1s linear infinite;
     }
+
     .animate-slide-in-left {
       animation: slideInLeft 0.5s ease;
     }
+
     .animate-slide-in-right {
       animation: slideInRight 0.5s ease;
     }
   </style>
 </head>
+
 <body>
 
   <div class="container mt-5">
-    <h2 class="text-center mb-4">SqlRacer Rankings</h2>
+    <h2 class="text-center mb-4">Sql Racer Rankings</h2>
+    <div class="row mb-3">
+      <div class="col-md-6 offset-md-3">
+        <select id="filterSelect" class="form-control">
+          <option
+            value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1559573419&single=true&output=csv">
+            All</option>
+          <option
+            value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1652006483&single=true&output=csv">
+            Round 1</option>
+          <option
+            value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=2108914356&single=true&output=csv">
+            Round 2</option>
+          <!-- <option value="source4">
+            Round 3</option>
+          <option value="source5">
+            Round 4</option>
+          <option value="source5">
+            Round 5</option> -->
+        </select>
+      </div>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -108,40 +152,30 @@
   </div>
 
   <script>
-    // Fetch data from CSV URL
-    fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1559573419&single=true&output=csv')
-      .then(response => response.text())
-      .then(data => {
-        // Parse CSV data
-        const rows = data.split('\n').slice(1); // Remove header row
-        let participants = rows.map(row => {
-          const columns = row.split(',');
-          return {
-            nickname: columns[0].trim(),
-            score: parseInt(columns[1].trim()),
-            duration: parseFloat(columns[2].trim())
-          };
-        });
 
-        // Calculate rank based on score and duration
-        participants.sort((a, b) => {
-          if (a.score !== b.score) {
-            return b.score - a.score;
-          } else {
-            return a.duration - b.duration;
-          }
-        }).forEach((participant, index) => {
-          participant.rank = index + 1;
-        });
+    // Function to render participant table
+    async function renderTable(source) {
+      // Fetch data from CSV URL
+      fetch(source)
+        .then(response => response.text())
+        .then(data => {
+          // Parse CSV data
+          const rows = data.split('\n').slice(1); // Remove header row
+          let participants = rows.map(row => {
+            const columns = row.split(',');
+            return {
+              nickname: columns[0].trim(),
+              score: parseInt(columns[1].trim()),
+              duration: parseFloat(columns[2].trim())
+            };
+          });
 
-        // Function to render participant table
-        function renderTable(participants) {
           const tableBody = document.getElementById('participantTableBody');
           tableBody.innerHTML = '';
           participants.forEach((participant, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${participant.rank}</td>
+              <td>${index + 1}</td>
               <td>${participant.nickname}</td>
               <td>${participant.score}</td>
               <td>${participant.duration}</td>
@@ -156,12 +190,20 @@
             }
             tableBody.appendChild(row);
           });
-        }
+        });
+    }
 
-        // Initial table rendering
-        renderTable(participants);
-      });
+    // Event listener for filter change
+    document.getElementById('filterSelect').addEventListener('change', function () {
+      renderTable(this.value);
+    });
+
+
+    // Initial table rendering
+    renderTable(document.getElementById('filterSelect').value);
+
   </script>
 
 </body>
+
 </html>
