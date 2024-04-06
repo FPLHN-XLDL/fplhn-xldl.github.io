@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SQL Race Rankings</title>
+  <title>SqlRacer Rankings</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
@@ -58,24 +58,47 @@
         transform: rotate(360deg);
       }
     }
+    @keyframes slideInLeft {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    @keyframes slideInRight {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
     .animate-fade-in {
       animation: fadeIn 0.5s ease forwards;
     }
     .animate-rotate {
       animation: rotate 1s linear infinite;
     }
+    .animate-slide-in-left {
+      animation: slideInLeft 0.5s ease;
+    }
+    .animate-slide-in-right {
+      animation: slideInRight 0.5s ease;
+    }
   </style>
 </head>
 <body>
 
   <div class="container mt-5">
-    <h2 class="text-center mb-4">SQL Race Rankings</h2>
+    <h2 class="text-center mb-4">SqlRacer Rankings</h2>
     <table class="table">
       <thead>
         <tr>
           <th>Rank</th>
           <th>Nickname</th>
           <th>Score</th>
+          <th>Duration (minutes)</th>
         </tr>
       </thead>
       <tbody id="participantTableBody">
@@ -95,34 +118,49 @@
           const columns = row.split(',');
           return {
             nickname: columns[0].trim(),
-            score: parseInt(columns[1].trim())
+            score: parseInt(columns[1].trim()),
+            duration: parseFloat(columns[2].trim())
           };
         });
 
-        // Sort participants by score (descending order)
-        participants.sort((a, b) => b.score - a.score);
-
-        // Populate table with participant data with animations
-        const tableBody = document.getElementById('participantTableBody');
-        participants.forEach((participant, index) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${participant.nickname}</td>
-            <td>${participant.score}</td>
-          `;
-          if (index < 3) {
-            row.classList.add('highlight-top3', 'animate-fade-in');
-            const icon = document.createElement('i');
-            icon.classList.add('rank-icon', 'fas', 'fa-crown', 'animate-rotate');
-            row.querySelector('td:nth-child(2)').prepend(icon);
-          } else if (index < 10) {
-            row.classList.add('highlight', 'animate-fade-in');
+        // Calculate rank based on score and duration
+        participants.sort((a, b) => {
+          if (a.score !== b.score) {
+            return b.score - a.score;
+          } else {
+            return a.duration - b.duration;
           }
-          tableBody.appendChild(row);
+        }).forEach((participant, index) => {
+          participant.rank = index + 1;
         });
-      })
-      .catch(error => console.error('Error fetching data:', error));
+
+        // Function to render participant table
+        function renderTable(participants) {
+          const tableBody = document.getElementById('participantTableBody');
+          tableBody.innerHTML = '';
+          participants.forEach((participant, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${participant.rank}</td>
+              <td>${participant.nickname}</td>
+              <td>${participant.score}</td>
+              <td>${participant.duration}</td>
+            `;
+            if (index < 3) {
+              row.classList.add('highlight-top3', 'animate-fade-in', index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right');
+              const icon = document.createElement('i');
+              icon.classList.add('rank-icon', 'fas', 'fa-crown', 'animate-rotate');
+              row.querySelector('td:nth-child(2)').prepend(icon);
+            } else if (index < 10) {
+              row.classList.add('highlight', 'animate-fade-in');
+            }
+            tableBody.appendChild(row);
+          });
+        }
+
+        // Initial table rendering
+        renderTable(participants);
+      });
   </script>
 
 </body>
