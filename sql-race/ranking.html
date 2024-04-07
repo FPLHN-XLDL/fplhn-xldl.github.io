@@ -116,7 +116,7 @@
   <div class="container mt-5">
     <h2 class="text-center mb-4">Sql Racer Rankings</h2>
     <div class="row mb-3">
-      <div class="col-md-6 offset-md-3">
+      <div class="col-md-9">
         <select id="filterSelect" class="form-control">
           <option
             value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1559573419&single=true&output=csv">
@@ -127,13 +127,18 @@
           <option
             value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=2108914356&single=true&output=csv">
             Round 2</option>
-          <option value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=867347270&single=true&output=csv">
+          <option 
+            value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=867347270&single=true&output=csv">
             Round 3</option>
-          <!-- <option value="source5">
+          <option 
+            value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVmZOHKVj3kV-KR_fDPqQrs5V3_r9nHOV9JW7NdNziuOz-90u8bOilprDgR9hlTOq4ncXljdQh4yUy/pub?gid=1462954180&single=true&output=csv">
             Round 4</option>
-          <option value="source5">
+          <!-- <option value="source5">
             Round 5</option> -->
         </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary btn-block" onclick="dowloadCSV()">Dowload CSV</button>
       </div>
     </div>
     <table class="table">
@@ -152,6 +157,10 @@
   </div>
 
   <script>
+    function dowloadCSV() {
+      const selectedSource = document.getElementById('filterSelect').value;
+      window.open(selectedSource, '_blank');
+    }
 
     // Function to render participant table
     async function renderTable(source) {
