@@ -123,7 +123,15 @@
     <section id="events" class="bg-light animated fade-in-up">
         <div class="container">
             <h2 class="text-center mb-4">Sự kiện <i class="fas fa-calendar-alt icon"></i></h2>
-            <div class="row" id="eventList"></div>
+            <div class="row">
+                <div class="col-md-6" id="eventList"></div>
+                <div class="col-md-6">
+                    <iframe id="selectionEventLink"
+                        width="500" height="744" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                        allowfullscreen="true"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -176,21 +184,23 @@
                 events.forEach(event => {
                     const [name, startDatetime, endDatetime, description, link] = event;
                     const eventCard = `
-                    <div class="col-lg-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">${name}</h5>
-                                <p class="card-text"><strong>Start Date:</strong> ${startDatetime}</p>
-                                <p class="card-text"><strong>End Date:</strong> ${endDatetime}</p>
-                                <p class="card-text">${description}</p>
-                                <a href="${link}" class="btn btn-primary">Xem thêm</a>
-                            </div>
+                    <div class="card mb-4" onclick="viewEventLink('${link.trim()}')">
+                        <div class="card-body">
+                            <h5 class="card-title">${name}</h5>
+                            <p class="card-text">${startDatetime} ~ ${endDatetime}</p>
+                            <p class="card-text">${description}</p>
                         </div>
                     </div>
                 `;
                     eventList.insertAdjacentHTML('beforeend', eventCard);
                 });
             });
+
+        function viewEventLink(link) {
+            console.log(link);
+            const frame = document.getElementById('selectionEventLink');
+            frame.setAttribute('src', link);
+        }
 
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_zWSTkcO7WIPxWqyvacfSuyFD5Zv7L7N4ifrwDDNPN2IoDhV_AwPju2vR6QW-A1-1PLzhuEQ_nTNl/pub?gid=0&single=true&output=csv')
             .then(response => response.text())
