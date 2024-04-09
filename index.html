@@ -14,7 +14,6 @@
 
         header {
             background-color: #64B5F6;
-            /* Darker Pastel Blue */
             color: white;
             padding: 60px 0;
             text-align: center;
@@ -30,32 +29,31 @@
 
         .btn-primary {
             background-color: #64B5F6;
-            /* Darker Pastel Blue */
             border: none;
         }
 
         .btn-primary:hover {
             background-color: #42A5F5;
-            /* Dark Pastel Blue */
         }
 
         .bg-light {
             background-color: #FFE082;
-            /* Darker Pastel Yellow */
         }
 
         .card {
             border: none;
-            transition: transform 0.3s;
+            transition: transform 0.3s border-color 0.3s;
+            border: 1px solid #ced4da;
         }
 
         .card:hover {
             transform: translateY(-10px);
+            border-width: 2px;
+            border-color: #64B5F6;
         }
 
         footer {
             background-color: #64B5F6;
-            /* Darker Pastel Blue */
             color: white;
             padding: 30px 0;
             text-align: center;
@@ -68,7 +66,6 @@
         .icon {
             font-size: 36px;
             color: #64B5F6;
-            /* Darker Pastel Blue */
         }
 
         .animated {
@@ -91,6 +88,10 @@
         .fade-in-up {
             animation-name: fadeInUp;
         }
+
+        .selected-card {
+            background-color: #ffc107;
+        }
     </style>
 </head>
 
@@ -98,6 +99,7 @@
 
     <header class="animated fade-in-up">
         <h1>Chào mừng bạn đến với Ngành Xử Lý Dữ Liệu</h1>
+        <h3>FPT Polytechnic Hà Nội - Bộ môn Ứng dụng phần mềm</h3>
     </header>
 
     <section id="curriculum" class="animated fade-in-up">
@@ -125,10 +127,9 @@
             <h2 class="text-center mb-4">Sự kiện <i class="fas fa-calendar-alt icon"></i></h2>
             <div class="row">
                 <div class="col-md-6" id="eventList"></div>
-                <div class="col-md-6">
-                    <iframe id="selectionEventLink"
-                        width="500" height="744" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
-                        allowfullscreen="true"
+                <div class="col-md-6 iframe-container">
+                    <iframe id="selectionEventLink" width="500" height="744" style="border:none;overflow:hidden"
+                        scrolling="no" frameborder="0" allowfullscreen="true"
                         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                 </div>
             </div>
@@ -173,7 +174,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRYF4TBipnZA3QL4dUKimX0ripeayX4kbNf60vfXVqgvwafEfpjNaNfRhBzQrihsDUBLZlvX0oFji3M/pub?gid=1135756173&single=true&output=csv')
             .then(response => response.text())
             .then(data => {
@@ -181,23 +181,33 @@
                 const events = rows.slice(1, 4); // Skip header and get top 3 competitions
 
                 const eventList = document.getElementById('eventList');
-                events.forEach(event => {
+                events.forEach((event, index) => {
                     const [name, startDatetime, endDatetime, description, link] = event;
                     const eventCard = `
-                    <div class="card mb-4" onclick="viewEventLink('${link.trim()}')">
+                    <div class="card mb-4 event-list-item" onclick="viewEventLink('${link.trim()}');highlightEvent(this);">
                         <div class="card-body">
                             <h5 class="card-title">${name}</h5>
-                            <p class="card-text">${startDatetime} ~ ${endDatetime}</p>
+                            <p class="card-text"><strong>Start Date:</strong> ${startDatetime}</p>
+                            <p class="card-text"><strong>End Date:</strong> ${endDatetime}</p>
                             <p class="card-text">${description}</p>
                         </div>
                     </div>
-                `;
+                    `;
+                    if (index === 1) viewEventLink(link.trim());
                     eventList.insertAdjacentHTML('beforeend', eventCard);
                 });
             });
 
+
+        function highlightEvent(eventItem) {
+            const allEventItems = document.querySelectorAll('.event-list-item');
+            allEventItems.forEach(item => {
+                item.classList.remove('selected-card');
+            });
+            eventItem.classList.add('selected-card');
+        }
+
         function viewEventLink(link) {
-            console.log(link);
             const frame = document.getElementById('selectionEventLink');
             frame.setAttribute('src', link);
         }
