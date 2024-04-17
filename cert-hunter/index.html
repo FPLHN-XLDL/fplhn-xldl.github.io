@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Courses</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Danh sách khóa học trực tuyến</h1>
+        <div class="form-row mb-3">
+            <div class="col-md-9">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-primary" href="https://forms.gle/ijquxTSXMy2UyPML6">Báo cáo hoàn thành</a>
+            </div>
+        </div>
+        <table id="coursesTable" class="table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên khóa học</th>
+                    <th>Thời lượng (h)</th>
+                    <th>Kỹ năng</th>
+                </tr>
+            </thead>
+            <tbody id="courseList">
+                <!-- Courses will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Fetch data from CSV
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQdjvyZvrvctLk52tAWbLHOjAwl0P7G2Eb0kmiYSPWzeej1QE2bxWelETf6b5vWvjJoIO10vtdRIRzI/pub?gid=163203314&single=true&output=tsv')
+            .then(response => response.text())
+            .then(data => processData(data))
+            .catch(error => console.error('Error fetching data:', error));
+
+        function processData(csvData) {
+            const rows = csvData.split('\n').slice(1);
+            const courses = rows.map(row => {
+                const [rel, name, duration, skills, link] = row.split('\t');
+                return { name, duration, skills, link };
+            });
+            displayCourses(courses);
+        }
+
+        function displayCourses(courses) {
+            const tableBody = document.getElementById('courseList');
+            tableBody.innerHTML = '';
+
+            courses.forEach((course, index) => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><a href="${course.link}">${course.name}</a></td>
+                    <td>${course.duration}</td>
+                    <td>${course.skills}</td>
+                `;
+            });
+        }
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#courseList tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
